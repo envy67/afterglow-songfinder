@@ -13,12 +13,12 @@ export function TrackTile({ track, context }: { track: Track; context?: Track[] 
       onClick={() => playTrack(track, context)}
       className="group w-40 shrink-0 text-left sm:w-44"
     >
-      <div className="liquid-glass relative aspect-square overflow-hidden rounded-[28px] p-1.5">
+      <div className="relative aspect-square overflow-hidden rounded-[24px] bg-muted shadow-[var(--shadow-surface)]">
         <img
           src={track.thumbnail}
           alt=""
           loading="lazy"
-          className="h-full w-full rounded-[22px] object-cover transition duration-500 group-hover:scale-[1.03]"
+          className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
         />
         <span className="play-button absolute bottom-3 right-3 h-10 w-10 translate-y-1 opacity-0 transition group-hover:translate-y-0 group-hover:opacity-100">
           <Play className="h-4 w-4 fill-current" />
@@ -29,7 +29,7 @@ export function TrackTile({ track, context }: { track: Track; context?: Track[] 
           </span>
         )}
       </div>
-      <p className="mt-2.5 truncate font-medium text-glow">{track.title}</p>
+      <p className="mt-2.5 truncate font-semibold">{track.title}</p>
       <p className="truncate text-sm text-muted-foreground">{track.artists}</p>
     </button>
   );
@@ -38,7 +38,7 @@ export function TrackTile({ track, context }: { track: Track; context?: Track[] 
 export function TrackTileSkeleton() {
   return (
     <div className="w-40 shrink-0 sm:w-44">
-      <div className="liquid-glass aspect-square animate-pulse rounded-[28px]" />
+      <div className="aspect-square animate-pulse rounded-[24px] bg-muted" />
       <div className="mt-3 h-3.5 w-3/4 animate-pulse rounded-full bg-muted" />
       <div className="mt-2 h-3 w-1/2 animate-pulse rounded-full bg-muted" />
     </div>

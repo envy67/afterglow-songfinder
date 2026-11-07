@@ -21,7 +21,7 @@ export function Shelf({
     <section className="mt-10">
       <div className="mb-4 flex items-end justify-between gap-4 px-1">
         <div className="min-w-0">
-          <h2 className="truncate text-2xl font-semibold text-glow">{title}</h2>
+          <h2 className="truncate text-2xl font-bold">{title}</h2>
           {subtitle && <p className="truncate text-sm text-muted-foreground">{subtitle}</p>}
         </div>
         {tracks.length > 0 && (
