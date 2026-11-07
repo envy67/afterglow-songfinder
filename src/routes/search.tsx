@@ -2,7 +2,6 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Clock, Loader2, Search as SearchIcon, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { LiquidGlass } from "@/components/music/LiquidGlass";
 import { TrackRow } from "@/components/music/TrackRow";
 import { searchSongs } from "@/lib/music.functions";
 import { usePlayer } from "@/store/player";
@@ -50,7 +49,7 @@ function SearchPage() {
 
   return (
     <div className="mx-auto max-w-4xl pt-4 md:pt-8">
-      <h1 className="px-1 text-4xl font-bold text-glow sm:text-5xl">Search</h1>
+      <h1 className="px-1 text-4xl font-bold sm:text-5xl">Search</h1>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -58,7 +57,7 @@ function SearchPage() {
           navigate({ search: text.trim() ? { q: text.trim() } : {}, replace: true });
         }}
       >
-        <LiquidGlass radius={999} className="mt-6 flex items-center gap-3 px-5 py-4">
+        <div className="surface mt-6 flex items-center gap-3 rounded-[22px] px-5 py-4 focus-within:ring-2 focus-within:ring-ring">
           <SearchIcon className="h-5 w-5 shrink-0 text-muted-foreground" />
           <input
             autoFocus
@@ -74,7 +73,7 @@ function SearchPage() {
               <X className="h-4 w-4" />
             </button>
           )}
-        </LiquidGlass>
+        </div>
       </form>
 
       {!q && hydrated && recentSearches.length > 0 && (
@@ -101,11 +100,12 @@ function SearchPage() {
       )}
 
       {tracks.length > 0 && (
-        <LiquidGlass radius={36} refract={false} className="mt-6 space-y-1 p-2">
-          {tracks.map((t) => (
+        <div className="surface mt-6 space-y-0.5 rounded-[28px] p-2">
+          {tracks.map((t, i) => (
             <TrackRow
               key={t.videoId}
               track={t}
+              number={i + 1}
               active={t.videoId === currentId}
               onPlay={() => {
                 addRecentSearch(q);
@@ -113,7 +113,7 @@ function SearchPage() {
               }}
             />
           ))}
-        </LiquidGlass>
+        </div>
       )}
     </div>
   );
