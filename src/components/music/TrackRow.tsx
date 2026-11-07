@@ -61,7 +61,7 @@ export function TrackRow({ track, onPlay, active, meta, onRemove, compact, numbe
         </span>
       </button>
       {meta && <span className="hidden shrink-0 text-xs text-muted-foreground sm:block">{meta}</span>}
-      {track.album && !compact && (
+      {track.album && !compact && !/views?$/i.test(track.album) && (
         <span className="hidden max-w-[30%] shrink truncate text-sm text-muted-foreground lg:block">{track.album}</span>
       )}
       <button
@@ -70,7 +70,7 @@ export function TrackRow({ track, onPlay, active, meta, onRemove, compact, numbe
         aria-label={liked ? "Remove from liked songs" : "Add to liked songs"}
         className={cn(
           "grid h-8 w-8 shrink-0 place-items-center rounded-full transition hover:bg-accent",
-          liked ? "text-live" : "text-muted-foreground opacity-0 group-hover:opacity-100",
+          liked ? "text-live" : "hidden text-muted-foreground opacity-0 group-hover:opacity-100 sm:grid",
         )}
       >
         <Heart className={cn("h-4 w-4", liked && "fill-current")} />
