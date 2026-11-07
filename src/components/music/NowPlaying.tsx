@@ -1,19 +1,20 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ListMusic, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { useCurrentTrack, usePlayer } from "@/store/player";
 import { LikeButton, TransportControls, VolumeControl } from "./Controls";
-import { LiquidGlass } from "./LiquidGlass";
 import { LyricsView } from "./LyricsView";
-import { ProgressBar } from "./ProgressBar";
 import { TrackRow } from "./TrackRow";
+import { Waveform } from "./Waveform";
 
 export function NowPlaying() {
   const open = usePlayer((s) => s.nowPlayingOpen);
   const setOpen = usePlayer((s) => s.setNowPlayingOpen);
   const track = useCurrentTrack();
   const [tab, setTab] = useState<"queue" | "lyrics">("queue");
+  // On phones the list replaces the artwork; on computers both show side by side.
+  const [panelOnPhone, setPanelOnPhone] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -25,49 +26,73 @@ export function NowPlaying() {
   if (!open || !track) return null;
 
   return (
-    <div className="fixed inset-0 z-50 animate-in fade-in duration-300 overflow-y-auto bg-scrim/35 backdrop-blur-2xl" role="dialog" aria-label="Now playing">
-      <img src={track.thumbnail} alt="" aria-hidden="true" className="pointer-events-none fixed inset-0 h-full w-full scale-125 object-cover opacity-35 blur-3xl" />
-      <div className="relative mx-auto grid min-h-full max-w-7xl gap-6 p-4 sm:p-8 lg:grid-cols-[1fr_minmax(0,460px)] lg:items-center">
-        <div className="flex flex-col items-center gap-6 pt-14 lg:pt-0">
-          <button type="button" onClick={() => setOpen(false)} aria-label="Close now playing" className="glass-button absolute left-4 top-4 h-11 w-11 sm:left-8 sm:top-8">
+    <div className="fixed inset-0 z-50 animate-in fade-in duration-300 overflow-y-auto bg-background" role="dialog" aria-label="Now playing">
+      <img src={track.thumbnail} alt="" aria-hidden="true" className="pointer-events-none fixed inset-0 h-full w-full scale-125 object-cover opacity-20 blur-3xl" />
+      <div className="relative mx-auto flex min-h-full max-w-7xl flex-col p-4 sm:p-8">
+        <header className="grid grid-cols-[auto_1fr_auto] items-center gap-3">
+          <button type="button" onClick={() => setOpen(false)} aria-label="Close now playing" className="glass-button h-11 w-11">
             <ChevronDown className="h-5 w-5" />
           </button>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">Now playing</p>
-          <LiquidGlass radius={48} className="aspect-square w-full max-w-[min(440px,70vw)] p-3">
-            <img key={track.videoId} src={track.thumbnail} alt={`${track.title} cover`} className="h-full w-full animate-in zoom-in-95 fade-in duration-500 rounded-[38px] object-cover shadow-2xl" />
-          </LiquidGlass>
-          <div className="w-full max-w-md text-center">
-            <h1 className="truncate text-3xl font-bold text-glow sm:text-4xl">{track.title}</h1>
-            <p className="mt-1 truncate text-lg text-muted-foreground">
-              {track.artists}
-              {track.album ? ` · ${track.album}` : ""}
-            </p>
-          </div>
-          <ProgressBar className="w-full max-w-md" />
-          <div className="flex w-full max-w-md items-center justify-between">
-            <LikeButton />
-            <TransportControls size="lg" />
-            <span className="h-10 w-10" />
-          </div>
-          <VolumeControl className="justify-center" />
-        </div>
+          <p className="text-center font-semibold">Now Playing</p>
+          <button
+            type="button"
+            onClick={() => setPanelOnPhone((v) => !v)}
+            aria-label={panelOnPhone ? "Show artwork" : "Show up next and lyrics"}
+            data-active={panelOnPhone}
+            className="glass-button h-11 w-11 lg:invisible"
+          >
+            {panelOnPhone ? <X className="h-5 w-5" /> : <ListMusic className="h-5 w-5" />}
+          </button>
+        </header>
 
-        <LiquidGlass radius={40} className="flex h-[min(78vh,720px)] flex-col overflow-hidden">
-          <div className="flex gap-1 p-3">
-            {(["queue", "lyrics"] as const).map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={() => setTab(t)}
-                data-active={tab === t}
-                className={cn("glass-button flex-1 py-2.5 text-sm font-semibold", tab !== t && "shadow-none")}
-              >
-                {t === "queue" ? "Up next" : "Lyrics"}
-              </button>
-            ))}
+        <div className="grid flex-1 gap-8 pt-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)] lg:items-center lg:gap-14 lg:pt-4">
+          <div className={cn("mx-auto w-full max-w-[440px] flex-col items-center", panelOnPhone ? "hidden lg:flex" : "flex")}>
+            <img
+              key={track.videoId}
+              src={track.thumbnail}
+              alt={`${track.title} cover`}
+              className="aspect-square w-full max-w-[min(440px,78vw)] animate-in zoom-in-95 fade-in rounded-[32px] object-cover duration-500 shadow-[var(--shadow-art)]"
+            />
+            <div className="mt-8 grid w-full grid-cols-[2.5rem_1fr_2.5rem] items-center gap-2">
+              <LikeButton plain />
+              <div className="min-w-0 text-center">
+                <h1 className="truncate text-3xl font-bold sm:text-4xl">{track.title}</h1>
+                <p className="mt-1 truncate text-lg text-muted-foreground">
+                  {track.artists}
+                  {track.album ? ` · ${track.album}` : ""}
+                </p>
+              </div>
+              <span />
+            </div>
+            <Waveform seed={track.videoId} className="mt-6 w-full" />
+            <div className="mt-5 w-full">
+              <TransportControls size="lg" extras />
+            </div>
+            <VolumeControl className="mt-6 hidden justify-center sm:flex" />
           </div>
-          <div className="min-h-0 flex-1">{tab === "queue" ? <UpNext /> : <LyricsView track={track} />}</div>
-        </LiquidGlass>
+
+          <section
+            aria-label="Up next and lyrics"
+            className={cn("surface h-[min(78vh,720px)] flex-col overflow-hidden rounded-[32px]", panelOnPhone ? "flex" : "hidden lg:flex")}
+          >
+            <div className="glass m-3 flex gap-1 rounded-full p-1">
+              {(["queue", "lyrics"] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setTab(t)}
+                  className={cn(
+                    "flex-1 rounded-full py-2 text-sm font-semibold transition",
+                    tab === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {t === "queue" ? "Up next" : "Lyrics"}
+                </button>
+              ))}
+            </div>
+            <div className="min-h-0 flex-1">{tab === "queue" ? <UpNext /> : <LyricsView track={track} />}</div>
+          </section>
+        </div>
       </div>
     </div>
   );
@@ -96,7 +121,7 @@ function UpNext() {
           </button>
         )}
       </div>
-      <div className="space-y-1">
+      <div className="space-y-0.5">
         {queue.slice(index).map((t, i) => (
           <TrackRow
             key={t.videoId}

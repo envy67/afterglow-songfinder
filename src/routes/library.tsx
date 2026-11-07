@@ -2,9 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 import { Heart, History, Play } from "lucide-react";
 import { useState } from "react";
-import { LiquidGlass } from "@/components/music/LiquidGlass";
 import { TrackRow } from "@/components/music/TrackRow";
-import { cn } from "@/lib/utils";
 import { usePlayer } from "@/store/player";
 
 export const Route = createFileRoute("/library")({
@@ -32,7 +30,7 @@ function LibraryPage() {
 
   return (
     <div className="mx-auto max-w-4xl pt-4 md:pt-8">
-      <h1 className="px-1 text-4xl font-bold text-glow sm:text-5xl">Library</h1>
+      <h1 className="px-1 text-4xl font-bold sm:text-5xl">Library</h1>
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <button type="button" data-active={tab === "liked"} onClick={() => setTab("liked")} className="glass-button px-5 py-2.5 text-sm font-semibold">
           <Heart className="h-4 w-4" /> Liked songs {hydrated && <span className="opacity-60">{liked.length}</span>}
@@ -42,7 +40,7 @@ function LibraryPage() {
         </button>
         <span className="flex-1" />
         {tab === "liked" && liked.length > 0 && (
-          <button type="button" onClick={() => playQueue(liked)} className="play-button gap-2 px-5 py-2.5 text-sm font-semibold">
+          <button type="button" onClick={() => playQueue(liked)} className="btn-solid px-5 py-2.5 text-sm">
             <Play className="h-4 w-4 fill-current" /> Play all
           </button>
         )}
@@ -54,11 +52,11 @@ function LibraryPage() {
       </div>
 
       {hydrated && (
-        <LiquidGlass radius={36} refract={false} className={cn("mt-6 p-2", "space-y-1")}>
+        <div className="surface mt-6 space-y-0.5 rounded-[28px] p-2">
           {tab === "liked" &&
             (liked.length ? (
-              liked.map((t) => (
-                <TrackRow key={t.videoId} track={t} active={t.videoId === currentId} onPlay={() => playTrack(t, liked)} />
+              liked.map((t, i) => (
+                <TrackRow key={t.videoId} track={t} number={i + 1} active={t.videoId === currentId} onPlay={() => playTrack(t, liked)} />
               ))
             ) : (
               <Empty text="Tap the heart on any song to keep it here." />
@@ -77,7 +75,7 @@ function LibraryPage() {
             ) : (
               <Empty text="Songs you play show up here, and shape your picks on Home." />
             ))}
-        </LiquidGlass>
+        </div>
       )}
     </div>
   );

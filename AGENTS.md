@@ -35,5 +35,5 @@ use the editor.
 - Playback goes through a single off-screen YouTube iframe player (`YouTubeEngine`), driven by the `usePlayer` store; components change the store, never the player — one source of truth for queue/play state.
 - Listening history, likes, queue and appearance live in localStorage via zustand `persist` with `skipHydration`, rehydrated in `AppShell`'s effect — avoids SSR hydration mismatches and needs no account.
 - Home recommendations are pure functions in `src/lib/recommend.ts` (covered by `recommend.test.ts`); keep ranking logic there, not in components.
-- Glass surfaces use `LiquidGlass` (per-element SVG displacement filter sized via ResizeObserver, Chromium only) with the `.liquid-glass` frosted fallback; small repeated items use the CSS class only, for performance.
+- Styling uses CSS classes in `src/styles.css`: `.surface` for solid dark panels, `.glass`/`.glass-button` for dark frosted buttons and navigation, `.btn-solid`/`.play-button` for primary actions — keeps the look consistent and themeable from one file.
 - Lyrics come from lrclib.net through the `getLyrics` server function.

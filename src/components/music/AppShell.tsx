@@ -5,7 +5,6 @@ import { PRESET_BACKGROUNDS } from "@/lib/backgrounds";
 import { cn } from "@/lib/utils";
 import { useAppearance } from "@/store/appearance";
 import { usePlayer } from "@/store/player";
-import { LiquidGlass } from "./LiquidGlass";
 import { NowPlaying } from "./NowPlaying";
 import { PlayerBar } from "./PlayerBar";
 import { YouTubeEngine } from "./YouTubeEngine";
@@ -27,14 +26,21 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <>
       <Backdrop />
-      <div className="relative z-10 flex h-dvh gap-4 p-3 md:p-4">
-        <Sidebar />
-        <main className={cn("thin-scrollbar min-w-0 flex-1 overflow-y-auto px-2 md:px-4", hasTrack ? "pb-40" : "pb-12")}>
-          <MobileNav />
+      <div className="relative z-10 flex h-dvh md:gap-4 md:p-4">
+        <NavRail />
+        <main
+          className={cn(
+            "thin-scrollbar min-w-0 flex-1 overflow-y-auto px-4 pt-5 md:px-6 md:pt-6",
+            hasTrack ? "pb-48 md:pb-32" : "pb-28 md:pb-10",
+          )}
+        >
           {children}
         </main>
       </div>
-      <PlayerBar />
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 space-y-2 px-3 pb-3 md:left-[7.5rem] md:right-4 md:px-0 md:pb-4">
+        <PlayerBar />
+        <TabBar />
+      </div>
       <NowPlaying />
       <YouTubeEngine />
     </>
@@ -63,70 +69,35 @@ function Backdrop() {
   );
 }
 
-function Logo() {
+/** Computer: a slim dark glass bar down the left side. */
+function NavRail() {
   return (
-    <Link to="/" className="flex items-center gap-2.5 px-2">
-      <span className="liquid-glass grid h-9 w-9 place-items-center rounded-full font-display text-lg font-bold">v</span>
-      <span className="font-display text-2xl font-bold tracking-tight text-glow">verre</span>
-    </Link>
+    <nav aria-label="Main" className="glass hidden w-[88px] shrink-0 flex-col items-center gap-1.5 rounded-[30px] p-2.5 md:flex">
+      {NAV.map(({ to, label, icon: Icon }) => (
+        <Link
+          key={to}
+          to={to}
+          className={cn("tab-link w-full py-3", to === "/settings" && "mt-auto")}
+          activeOptions={{ exact: to === "/" }}
+        >
+          <Icon className="h-[22px] w-[22px]" />
+          <span>{label}</span>
+        </Link>
+      ))}
+    </nav>
   );
 }
 
-function Sidebar() {
-  const recent = usePlayer((s) => s.history);
-  const playTrack = usePlayer((s) => s.playTrack);
-  const seen = new Set<string>();
-  const last = recent.filter((h) => (seen.has(h.track.videoId) ? false : (seen.add(h.track.videoId), true))).slice(0, 5);
+/** Phone: dark glass tab bar along the bottom, under the mini player. */
+function TabBar() {
   return (
-    <LiquidGlass as="aside" radius={36} className="hidden w-64 shrink-0 flex-col p-4 md:flex">
-      <div className="py-2">
-        <Logo />
-      </div>
-      <nav className="mt-6 space-y-1" aria-label="Main">
-        {NAV.map(({ to, label, icon: Icon }) => (
-          <Link key={to} to={to} className="nav-link" activeOptions={{ exact: to === "/" }}>
-            <Icon className="h-[18px] w-[18px]" />
-            <span className="font-medium">{label}</span>
-          </Link>
-        ))}
-      </nav>
-      {last.length > 0 && (
-        <div className="mt-8 min-h-0 flex-1 overflow-hidden">
-          <p className="px-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Played last</p>
-          <div className="mt-3 space-y-1">
-            {last.map(({ track }) => (
-              <button
-                key={track.videoId}
-                type="button"
-                onClick={() => playTrack(track)}
-                className="flex w-full items-center gap-3 rounded-2xl p-1.5 text-left transition hover:bg-accent"
-              >
-                <img src={track.thumbnail} alt="" className="h-9 w-9 rounded-xl object-cover" />
-                <span className="min-w-0">
-                  <span className="block truncate text-sm font-medium">{track.title}</span>
-                  <span className="block truncate text-xs text-muted-foreground">{track.artists}</span>
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-      <p className="mt-auto px-3 pt-4 text-xs text-muted-foreground">Your listening history stays on this device.</p>
-    </LiquidGlass>
-  );
-}
-
-function MobileNav() {
-  return (
-    <div className="sticky top-0 z-30 mb-2 flex items-center justify-between gap-2 pt-1 md:hidden">
-      <Logo />
-      <LiquidGlass as="nav" radius={999} className="flex gap-1 p-1" aria-label="Main">
-        {NAV.map(({ to, label, icon: Icon }) => (
-          <Link key={to} to={to} aria-label={label} className="nav-link p-2.5" activeOptions={{ exact: to === "/" }}>
-            <Icon className="h-[18px] w-[18px]" />
-          </Link>
-        ))}
-      </LiquidGlass>
-    </div>
+    <nav aria-label="Main" className="glass pointer-events-auto grid grid-cols-4 gap-1 rounded-[28px] p-1.5 md:hidden">
+      {NAV.map(({ to, label, icon: Icon }) => (
+        <Link key={to} to={to} className="tab-link" activeOptions={{ exact: to === "/" }}>
+          <Icon className="h-[22px] w-[22px]" />
+          <span>{label}</span>
+        </Link>
+      ))}
+    </nav>
   );
 }

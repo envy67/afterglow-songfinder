@@ -95,7 +95,12 @@ export function YouTubeEngine() {
               }
             } else if (e.data === PAUSED) usePlayer.setState({ playing: false, buffering: false });
             else if (e.data === BUFFERING) usePlayer.setState({ buffering: true });
-            else if (e.data === ENDED) st.next();
+            else if (e.data === ENDED) {
+              if (st.repeat) {
+                playerRef.current?.seekTo(0, true);
+                playerRef.current?.playVideo();
+              } else st.next();
+            }
           },
           onError: () => {
             toast("This song can't be played here, skipping to the next one.");

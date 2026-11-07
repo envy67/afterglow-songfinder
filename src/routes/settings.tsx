@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Check, ImagePlus } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { LiquidGlass } from "@/components/music/LiquidGlass";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { compressImage, PRESET_BACKGROUNDS } from "@/lib/backgrounds";
@@ -56,11 +55,11 @@ function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-4xl pt-4 md:pt-8">
-      <h1 className="px-1 text-4xl font-bold text-glow sm:text-5xl">Settings</h1>
+      <h1 className="px-1 text-4xl font-bold sm:text-5xl">Settings</h1>
 
-      <LiquidGlass radius={40} className="mt-6 p-6">
+      <section className="surface mt-6 rounded-[28px] p-6">
         <h2 className="text-xl font-semibold">Background</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Choose a picture to sit behind the glass, or use your own.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Choose a picture to sit behind the app, or use your own.</p>
         <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {tiles.map((t) => (
             <button
@@ -105,9 +104,9 @@ function SettingsPage() {
             <Slider aria-label="Background darkness" value={[dim * 100]} max={80} step={1} onValueChange={([v]) => setDim((v ?? 0) / 100)} className="mt-2" />
           </label>
         </div>
-      </LiquidGlass>
+      </section>
 
-      <LiquidGlass radius={40} className="mt-6 space-y-5 p-6">
+      <section className="surface mt-6 space-y-5 rounded-[28px] p-6">
         <h2 className="text-xl font-semibold">Playback</h2>
         <label className="flex items-center justify-between gap-4">
           <span>
@@ -138,7 +137,7 @@ function SettingsPage() {
             Clear recent searches
           </button>
         </div>
-      </LiquidGlass>
+      </section>
     </div>
   );
 }
