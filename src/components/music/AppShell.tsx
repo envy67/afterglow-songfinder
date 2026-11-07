@@ -30,7 +30,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <NavRail />
         <main
           className={cn(
-            "thin-scrollbar min-w-0 flex-1 overflow-y-auto px-4 pt-5 md:px-6 md:pt-6",
+            "thin-scrollbar min-w-0 flex-1 overflow-y-auto overscroll-none px-4 pt-5 md:px-6 md:pt-6",
             hasTrack ? "pb-48 md:pb-32" : "pb-28 md:pb-10",
           )}
         >
