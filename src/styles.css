@@ -114,10 +114,29 @@
   body {
     color-scheme: dark;
     overscroll-behavior: none;
+    /* App-like: the page itself never moves; only inner lists scroll. */
+    height: 100%;
+    overflow: hidden;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+  }
+  /* Pictures and labels can't be dragged or highlighted around the screen. */
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  input,
+  textarea,
+  [contenteditable] {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+  img {
+    -webkit-user-drag: none;
   }
   h1,
   h2,

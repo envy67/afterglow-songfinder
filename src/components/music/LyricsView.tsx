@@ -51,7 +51,7 @@ export function LyricsView({ track }: { track: Track }) {
             data-line={i}
             onClick={() => playerController.seek(l.time)}
             className={cn(
-              "block w-full py-2 text-left font-display text-2xl font-semibold leading-snug transition-all duration-300",
+              "block w-full py-2 text-center font-display text-balance text-2xl font-semibold leading-snug transition-all duration-300",
               i === active ? "text-foreground text-glow" : "text-muted-foreground/60 hover:text-muted-foreground",
             )}
           >
@@ -63,7 +63,7 @@ export function LyricsView({ track }: { track: Track }) {
 
   if (data?.plain)
     return (
-      <div className="thin-scrollbar h-full overflow-y-auto overscroll-contain whitespace-pre-line p-6 text-lg leading-relaxed text-muted-foreground">
+      <div className="thin-scrollbar h-full overflow-y-auto overscroll-contain whitespace-pre-line p-6 text-center text-lg leading-relaxed text-muted-foreground">
         {data.plain}
       </div>
     );
