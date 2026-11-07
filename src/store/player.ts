@@ -13,6 +13,7 @@ type PlayerState = {
   recentSearches: string[];
   volume: number;
   autoplay: boolean;
+  repeat: boolean;
   hydrated: boolean;
   nowPlayingOpen: boolean;
 
@@ -35,6 +36,8 @@ type PlayerState = {
   clearRecentSearches: () => void;
   setVolume: (v: number) => void;
   setAutoplay: (v: boolean) => void;
+  toggleRepeat: () => void;
+  shuffleUpNext: () => void;
   setNowPlayingOpen: (v: boolean) => void;
 };
 
@@ -50,6 +53,7 @@ export const usePlayer = create<PlayerState>()(
       recentSearches: [],
       volume: 80,
       autoplay: true,
+      repeat: false,
       hydrated: false,
       nowPlayingOpen: false,
 
@@ -138,6 +142,16 @@ export const usePlayer = create<PlayerState>()(
       clearRecentSearches: () => set({ recentSearches: [] }),
       setVolume: (v) => set({ volume: v }),
       setAutoplay: (v) => set({ autoplay: v }),
+      toggleRepeat: () => set({ repeat: !get().repeat }),
+      shuffleUpNext: () => {
+        const { queue, index } = get();
+        const rest = queue.slice(index + 1);
+        for (let i = rest.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [rest[i], rest[j]] = [rest[j]!, rest[i]!];
+        }
+        set({ queue: [...queue.slice(0, index + 1), ...rest] });
+      },
       setNowPlayingOpen: (v) => set({ nowPlayingOpen: v }),
     }),
     {
@@ -152,6 +166,7 @@ export const usePlayer = create<PlayerState>()(
         recentSearches: s.recentSearches,
         volume: s.volume,
         autoplay: s.autoplay,
+        repeat: s.repeat,
       }),
       onRehydrateStorage: () => () => {
         usePlayer.setState({ hydrated: true, playing: false });
