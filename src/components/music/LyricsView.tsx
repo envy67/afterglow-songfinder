@@ -43,7 +43,7 @@ export function LyricsView({ track }: { track: Track }) {
 
   if (lines?.length)
     return (
-      <div ref={containerRef} className="thin-scrollbar relative h-full overflow-y-auto px-6 py-[40%]">
+      <div ref={containerRef} className="thin-scrollbar relative h-full overflow-y-auto overscroll-contain px-6 py-4">
         {lines.map((l, i) => (
           <button
             type="button"
@@ -63,7 +63,7 @@ export function LyricsView({ track }: { track: Track }) {
 
   if (data?.plain)
     return (
-      <div className="thin-scrollbar h-full overflow-y-auto whitespace-pre-line p-6 text-lg leading-relaxed text-muted-foreground">
+      <div className="thin-scrollbar h-full overflow-y-auto overscroll-contain whitespace-pre-line p-6 text-lg leading-relaxed text-muted-foreground">
         {data.plain}
       </div>
     );
