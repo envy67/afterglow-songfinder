@@ -28,3 +28,12 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Music data (search, similar songs) comes from YouTube Music's web API, called only from `src/lib/ytmusic.server.ts` via server functions in `src/lib/music.functions.ts`; the browser never calls it directly (no CORS, keeps parsing in one place).
+- Playback goes through a single off-screen YouTube iframe player (`YouTubeEngine`), driven by the `usePlayer` store; components change the store, never the player — one source of truth for queue/play state.
+- Listening history, likes, queue and appearance live in localStorage via zustand `persist` with `skipHydration`, rehydrated in `AppShell`'s effect — avoids SSR hydration mismatches and needs no account.
+- Home recommendations are pure functions in `src/lib/recommend.ts` (covered by `recommend.test.ts`); keep ranking logic there, not in components.
+- Glass surfaces use `LiquidGlass` (per-element SVG displacement filter sized via ResizeObserver, Chromium only) with the `.liquid-glass` frosted fallback; small repeated items use the CSS class only, for performance.
+- Lyrics come from lrclib.net through the `getLyrics` server function.
