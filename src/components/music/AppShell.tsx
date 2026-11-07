@@ -20,6 +20,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     void usePlayer.persist.rehydrate();
     void useAppearance.persist.rehydrate();
+    // Stop pictures and links from being dragged around the screen.
+    const noDrag = (e: DragEvent) => e.preventDefault();
+    document.addEventListener("dragstart", noDrag);
+    return () => document.removeEventListener("dragstart", noDrag);
   }, []);
   const hasTrack = usePlayer((s) => s.queue.length > 0);
 
