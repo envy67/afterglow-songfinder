@@ -84,14 +84,20 @@ export const usePlayer = create<PlayerState>()(
       setPlaying: (p) => set({ playing: p }),
       playNext: (t) => {
         const { queue, index } = get();
-        if (!queue.length) return set({ queue: [t], index: 0, playing: true });
+        if (!queue.length) {
+          set({ queue: [t], index: 0, playing: true });
+          return;
+        }
         const q = queue.filter((x, i) => i <= index || x.videoId !== t.videoId);
         q.splice(index + 1, 0, t);
         set({ queue: q });
       },
       addToQueue: (t) => {
         const { queue } = get();
-        if (!queue.length) return set({ queue: [t], index: 0, playing: true });
+        if (!queue.length) {
+          set({ queue: [t], index: 0, playing: true });
+          return;
+        }
         if (!queue.some((x) => x.videoId === t.videoId)) set({ queue: [...queue, t] });
       },
       appendToQueue: (tracks) => {

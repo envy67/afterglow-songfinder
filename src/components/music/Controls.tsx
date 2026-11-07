@@ -75,7 +75,7 @@ export function VolumeControl({ className }: { className?: string }) {
       >
         <Icon className="h-4 w-4" />
       </button>
-      <Slider aria-label="Volume" value={[volume]} max={100} step={1} onValueChange={([v]) => setVolume(v)} className="w-24" />
+      <Slider aria-label="Volume" value={[volume]} max={100} step={1} onValueChange={([v]) => setVolume(v ?? 0)} className="w-24" />
     </div>
   );
 }

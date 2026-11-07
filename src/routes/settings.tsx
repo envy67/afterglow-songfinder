@@ -33,7 +33,10 @@ function SettingsPage() {
 
   async function onFile(file?: File) {
     if (!file) return;
-    if (!file.type.startsWith("image/")) return toast("Please choose an image file.");
+    if (!file.type.startsWith("image/")) {
+      toast("Please choose an image file.");
+      return;
+    }
     setBusy(true);
     try {
       setCustomImage(await compressImage(file));
@@ -93,13 +96,13 @@ function SettingsPage() {
             <span className="flex justify-between text-sm font-medium">
               Blur <span className="text-muted-foreground">{blur}px</span>
             </span>
-            <Slider aria-label="Background blur" value={[blur]} max={40} step={1} onValueChange={([v]) => setBlur(v)} className="mt-2" />
+            <Slider aria-label="Background blur" value={[blur]} max={40} step={1} onValueChange={([v]) => setBlur(v ?? 0)} className="mt-2" />
           </label>
           <label className="block">
             <span className="flex justify-between text-sm font-medium">
               Darken <span className="text-muted-foreground">{Math.round(dim * 100)}%</span>
             </span>
-            <Slider aria-label="Background darkness" value={[dim * 100]} max={80} step={1} onValueChange={([v]) => setDim(v / 100)} className="mt-2" />
+            <Slider aria-label="Background darkness" value={[dim * 100]} max={80} step={1} onValueChange={([v]) => setDim((v ?? 0) / 100)} className="mt-2" />
           </label>
         </div>
       </LiquidGlass>

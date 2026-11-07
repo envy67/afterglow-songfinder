@@ -14,10 +14,10 @@ import { Equalizer } from "./Equalizer";
 type Props = {
   track: Track;
   onPlay: () => void;
-  active?: boolean;
+  active?: boolean | undefined;
   meta?: ReactNode;
-  onRemove?: () => void;
-  compact?: boolean;
+  onRemove?: (() => void) | undefined;
+  compact?: boolean | undefined;
 };
 
 export function TrackRow({ track, onPlay, active, meta, onRemove, compact }: Props) {

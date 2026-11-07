@@ -13,7 +13,7 @@ export function Shelf({
   title: ReactNode;
   subtitle?: ReactNode;
   tracks: Track[];
-  loading?: boolean;
+  loading?: boolean | undefined;
 }) {
   const playQueue = usePlayer((s) => s.playQueue);
   if (!loading && tracks.length === 0) return null;

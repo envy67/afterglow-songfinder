@@ -8,7 +8,8 @@ import { searchSongs } from "@/lib/music.functions";
 import { usePlayer } from "@/store/player";
 
 export const Route = createFileRoute("/search")({
-  validateSearch: (s: Record<string, unknown>) => ({ q: typeof s.q === "string" ? s.q : "" }),
+  validateSearch: (s: Record<string, unknown>): { q?: string } =>
+    typeof s["q"] === "string" && s["q"] ? { q: s["q"] } : {},
   head: () => ({
     meta: [
       { title: "Search · Verre" },
@@ -23,7 +24,7 @@ export const Route = createFileRoute("/search")({
 });
 
 function SearchPage() {
-  const { q } = Route.useSearch();
+  const q = Route.useSearch().q ?? "";
   const navigate = useNavigate({ from: "/search" });
   const [text, setText] = useState(q);
   const recentSearches = usePlayer((s) => s.recentSearches);
@@ -33,7 +34,7 @@ function SearchPage() {
 
   useEffect(() => {
     const t = setTimeout(() => {
-      if (text.trim() !== q) navigate({ search: { q: text.trim() }, replace: true });
+      if (text.trim() !== q) navigate({ search: text.trim() ? { q: text.trim() } : {}, replace: true });
     }, 350);
     return () => clearTimeout(t);
   }, [text, q, navigate]);
@@ -54,7 +55,7 @@ function SearchPage() {
         onSubmit={(e) => {
           e.preventDefault();
           addRecentSearch(text);
-          navigate({ search: { q: text.trim() }, replace: true });
+          navigate({ search: text.trim() ? { q: text.trim() } : {}, replace: true });
         }}
       >
         <LiquidGlass radius={999} className="mt-6 flex items-center gap-3 px-5 py-4">

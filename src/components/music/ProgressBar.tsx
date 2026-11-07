@@ -17,9 +17,9 @@ export function ProgressBar({ className }: { className?: string }) {
         value={[value]}
         max={Math.max(1, duration)}
         step={1}
-        onValueChange={([v]) => setDrag(v)}
+        onValueChange={([v]) => setDrag(v ?? 0)}
         onValueCommit={([v]) => {
-          playerController.seek(v);
+          playerController.seek(v ?? 0);
           setDrag(null);
         }}
         className="flex-1"

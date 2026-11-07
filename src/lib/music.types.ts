@@ -2,8 +2,8 @@ export type Track = {
   videoId: string;
   title: string;
   artists: string;
-  album?: string;
-  duration?: string;
+  album?: string | undefined;
+  duration?: string | undefined;
   thumbnail: string;
 };
 

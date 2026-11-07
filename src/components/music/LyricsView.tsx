@@ -19,7 +19,9 @@ export function LyricsView({ track }: { track: Track }) {
   const active = useMemo(() => {
     if (!lines) return -1;
     let i = -1;
-    for (let j = 0; j < lines.length; j++) if (lines[j].time <= current + 0.3) i = j;
+    lines.forEach((l, j) => {
+      if (l.time <= current + 0.3) i = j;
+    });
     return i;
   }, [lines, current]);
   const containerRef = useRef<HTMLDivElement>(null);

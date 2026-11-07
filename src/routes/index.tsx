@@ -110,7 +110,7 @@ function Home() {
             </Link>
           </LiquidGlass>
           {DISCOVER.map((d, i) => (
-            <Shelf key={d.query} title={d.title} tracks={discover[i].data?.tracks.slice(0, 14) ?? []} loading={discover[i].isLoading} />
+            <Shelf key={d.query} title={d.title} tracks={discover[i]?.data?.tracks.slice(0, 14) ?? []} loading={discover[i]?.isLoading} />
           ))}
         </>
       )}

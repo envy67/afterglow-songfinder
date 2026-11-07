@@ -37,7 +37,7 @@ function groups(runs: Run[] | undefined): string[] {
   const out: string[][] = [[]];
   for (const r of runs ?? []) {
     if (r.text.trim() === "•") out.push([]);
-    else out[out.length - 1].push(r.text);
+    else out[out.length - 1]?.push(r.text);
   }
   return out.map((g) => g.join("").trim()).filter(Boolean);
 }
@@ -118,7 +118,7 @@ function parseLrc(lrc: string): LyricLine[] {
   const lines: LyricLine[] = [];
   for (const raw of lrc.split("\n")) {
     const m = raw.match(/^\[(\d+):(\d+(?:\.\d+)?)\](.*)$/);
-    if (m) lines.push({ time: Number(m[1]) * 60 + Number(m[2]), text: m[3].trim() });
+    if (m) lines.push({ time: Number(m[1]) * 60 + Number(m[2]), text: (m[3] ?? "").trim() });
   }
   return lines;
 }
@@ -126,7 +126,7 @@ function parseLrc(lrc: string): LyricLine[] {
 export async function lyricsRaw(title: string, artist: string, duration: number): Promise<Lyrics> {
   const headers = { "User-Agent": "Verre music player (https://lovable.dev)" };
   const track = cleanTitle(title);
-  const firstArtist = artist.split(/,|&| x /i)[0].trim();
+  const firstArtist = (artist.split(/,|&| x /i)[0] ?? "").trim();
   type L = { syncedLyrics?: string | null; plainLyrics?: string | null; duration?: number };
   let hit: L | null = null;
   const qs = new URLSearchParams({ track_name: track, artist_name: firstArtist });
