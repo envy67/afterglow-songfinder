@@ -23,11 +23,20 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
+// Before any history exists, each shelf is the "similar songs" list of one well-known song.
 const DISCOVER = [
-  { title: "Start with the hits", query: "today's biggest hits" },
-  { title: "Something calm", query: "chill lofi beats" },
-  { title: "Throwbacks", query: "2000s pop hits" },
+  { title: "Start with the hits", query: "Blinding Lights The Weeknd" },
+  { title: "Something calm", query: "Sunset Lover Petit Biscuit" },
+  { title: "Throwbacks", query: "Mr. Brightside The Killers" },
 ];
+
+async function discoverShelf(query: string): Promise<Track[]> {
+  const found = await searchSongs({ data: { query } });
+  const first = found.tracks[0];
+  if (!first) return [];
+  const similar = await getRadio({ data: { videoId: first.videoId } });
+  return similar.tracks.length ? similar.tracks : found.tracks;
+}
 
 function greeting() {
   const h = new Date().getHours();
@@ -50,8 +59,8 @@ function Home() {
   });
   const discover = useQueries({
     queries: DISCOVER.map((d) => ({
-      queryKey: ["search", d.query],
-      queryFn: () => searchSongs({ data: { query: d.query } }),
+      queryKey: ["discover", d.query],
+      queryFn: () => discoverShelf(d.query),
       staleTime: 60 * 60 * 1000,
       enabled: hydrated && history.length === 0,
     })),
@@ -110,7 +119,7 @@ function Home() {
             </Link>
           </LiquidGlass>
           {DISCOVER.map((d, i) => (
-            <Shelf key={d.query} title={d.title} tracks={discover[i]?.data?.tracks.slice(0, 14) ?? []} loading={discover[i]?.isLoading} />
+            <Shelf key={d.query} title={d.title} tracks={discover[i]?.data?.slice(0, 14) ?? []} loading={discover[i]?.isLoading} />
           ))}
         </>
       )}

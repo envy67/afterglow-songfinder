@@ -59,6 +59,7 @@ export function YouTubeEngine() {
   const loadedId = useRef<string | null>(null);
   const recordedId = useRef<string | null>(null);
   const radioFetched = useRef(new Set<string>());
+  const stallTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [ready, setReady] = useState(false);
   const hydrated = usePlayer((s) => s.hydrated);
   const radio = useServerFn(getRadio);
@@ -128,8 +129,16 @@ export function YouTubeEngine() {
         loadedId.current = t.videoId;
         recordedId.current = null;
         useProgress.setState({ current: 0, duration: durationToSeconds(t.duration) });
-        if (s.playing) p.loadVideoById(t.videoId);
-        else p.cueVideoById(t.videoId);
+        if (stallTimer.current) clearTimeout(stallTimer.current);
+        if (s.playing) {
+          p.loadVideoById(t.videoId);
+          // If nothing starts after a while, let the listener know instead of failing silently.
+          stallTimer.current = setTimeout(() => {
+            const st = usePlayer.getState();
+            if (st.playing && st.queue[st.index]?.videoId === t.videoId && p.getPlayerState() !== PLAYING)
+              toast("This song is taking a while to start. Try another one or check your connection.");
+          }, 15000);
+        } else p.cueVideoById(t.videoId);
         return;
       }
       const state = p.getPlayerState();
