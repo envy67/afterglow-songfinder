@@ -37,3 +37,4 @@ use the editor.
 - Home recommendations are pure functions in `src/lib/recommend.ts` (covered by `recommend.test.ts`); keep ranking logic there, not in components.
 - Styling uses CSS classes in `src/styles.css`: `.surface` for solid dark panels, `.glass`/`.glass-button` for dark frosted buttons and navigation, `.btn-solid`/`.play-button` for primary actions — keeps the look consistent and themeable from one file.
 - Lyrics come from lrclib.net through the `getLyrics` server function.
+- Artist pages live at `/artists/$id` (YouTube Music channel id) so the Artists tab stays highlighted; "your artists" ranking is a pure function in `src/lib/artists.ts` (covered by `artists.test.ts`), and tracks without a stored `artistId` are resolved by name through `findArtists`.

@@ -7,6 +7,7 @@ import { TrackRow } from "@/components/music/TrackRow";
 import { getRadio, searchSongs } from "@/lib/music.functions";
 import type { Track } from "@/lib/music.types";
 import { buildRecommendations, pickSeeds, recentDistinct, recentlyPlayedIds } from "@/lib/recommend";
+import { shuffled } from "@/lib/utils";
 import { usePlayer } from "@/store/player";
 
 export const Route = createFileRoute("/")({
@@ -140,15 +141,6 @@ function Home() {
       )}
     </div>
   );
-}
-
-function shuffled<T>(list: T[]): T[] {
-  const a = [...list];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j]!, a[i]!];
-  }
-  return a;
 }
 
 /** Album-style header for the mix: cover, title, then Play and Shuffle. */

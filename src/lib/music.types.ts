@@ -5,6 +5,22 @@ export type Track = {
   album?: string | undefined;
   duration?: string | undefined;
   thumbnail: string;
+  /** Page id and name of the first credited artist, when YouTube Music gives them. */
+  artistId?: string | undefined;
+  artistName?: string | undefined;
+};
+
+export type ArtistSummary = { id: string; name: string; thumbnail: string; subtitle?: string | undefined };
+
+export type ArtistPage = {
+  id: string;
+  name: string;
+  /** Wide banner picture. */
+  image: string;
+  audience?: string | undefined;
+  description?: string | undefined;
+  songs: Track[];
+  related: ArtistSummary[];
 };
 
 export type HistoryEntry = { track: Track; playedAt: number };

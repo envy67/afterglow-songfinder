@@ -1,4 +1,4 @@
-import { Heart, ListEnd, ListPlus, MoreHorizontal, X } from "lucide-react";
+import { Heart, ListEnd, ListPlus, MicVocal, MoreHorizontal, X } from "lucide-react";
 import type { ReactNode } from "react";
 import {
   DropdownMenu,
@@ -9,6 +9,7 @@ import {
 import type { Track } from "@/lib/music.types";
 import { cn } from "@/lib/utils";
 import { useIsLiked, usePlayer } from "@/store/player";
+import { useOpenArtist } from "@/hooks/use-open-artist";
 import { Equalizer } from "./Equalizer";
 
 type Props = {
@@ -26,6 +27,7 @@ export function TrackRow({ track, onPlay, active, meta, onRemove, compact, numbe
   const liked = useIsLiked(track.videoId);
   const playing = usePlayer((s) => s.playing);
   const { toggleLike, playNext, addToQueue } = usePlayer.getState();
+  const openArtist = useOpenArtist();
   return (
     <div
       className={cn(
@@ -102,6 +104,11 @@ export function TrackRow({ track, onPlay, active, meta, onRemove, compact, numbe
             <DropdownMenuItem onClick={() => toggleLike(track)}>
               <Heart className="mr-2 h-4 w-4" /> {liked ? "Unlike" : "Like"}
             </DropdownMenuItem>
+            {track.artists && (
+              <DropdownMenuItem onClick={() => void openArtist(track)}>
+                <MicVocal className="mr-2 h-4 w-4" /> Go to artist
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       )}
