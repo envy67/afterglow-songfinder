@@ -1,6 +1,7 @@
 import { ChevronDown, ListMusic, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Switch } from "@/components/ui/switch";
+import { useOpenArtist } from "@/hooks/use-open-artist";
 import { cn } from "@/lib/utils";
 import { useCurrentTrack, usePlayer } from "@/store/player";
 import { LikeButton, TransportControls, VolumeControl } from "./Controls";
@@ -12,6 +13,7 @@ export function NowPlaying() {
   const open = usePlayer((s) => s.nowPlayingOpen);
   const setOpen = usePlayer((s) => s.setNowPlayingOpen);
   const track = useCurrentTrack();
+  const openArtist = useOpenArtist();
   const [tab, setTab] = useState<"queue" | "lyrics">("queue");
   // On phones the list replaces the artwork; on computers both show side by side.
   const [panelOnPhone, setPanelOnPhone] = useState(false);
@@ -62,7 +64,13 @@ export function NowPlaying() {
               <div className="min-w-0 text-center">
                 <h1 className="truncate text-3xl font-bold sm:text-4xl">{track.title}</h1>
                 <p className="mt-1 truncate text-lg text-muted-foreground">
-                  {track.artists}
+                  <button
+                    type="button"
+                    onClick={() => void openArtist(track)}
+                    className="underline-offset-4 transition hover:text-foreground hover:underline"
+                  >
+                    {track.artists}
+                  </button>
                   {track.album ? ` · ${track.album}` : ""}
                 </p>
               </div>

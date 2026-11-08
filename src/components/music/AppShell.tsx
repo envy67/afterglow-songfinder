@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Home, Library, Search, Settings } from "lucide-react";
+import { Home, Library, MicVocal, Search, Settings } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import { PRESET_BACKGROUNDS } from "@/lib/backgrounds";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ import { YouTubeEngine } from "./YouTubeEngine";
 const NAV = [
   { to: "/", label: "Home", icon: Home },
   { to: "/search", label: "Search", icon: Search },
+  { to: "/artists", label: "Artists", icon: MicVocal },
   { to: "/library", label: "Library", icon: Library },
   { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
@@ -95,7 +96,7 @@ function NavRail() {
 /** Phone: dark glass tab bar along the bottom, under the mini player. */
 function TabBar() {
   return (
-    <nav aria-label="Main" className="glass pointer-events-auto grid grid-cols-4 gap-1 rounded-[28px] p-1.5 md:hidden">
+    <nav aria-label="Main" className="glass pointer-events-auto grid grid-cols-5 gap-1 rounded-[28px] p-1.5 md:hidden">
       {NAV.map(({ to, label, icon: Icon }) => (
         <Link key={to} to={to} className="tab-link" activeOptions={{ exact: to === "/" }}>
           <Icon className="h-[22px] w-[22px]" />
